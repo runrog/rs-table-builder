@@ -17,8 +17,16 @@ http.createServer((request, response) => {
     }
   }
 
-  const extname = path.extname(filePath);
+  // zoolander loads version numbers after font files, so we
+  // need to tell node what to load.
+  if (filePath.match(/\/dist\/zoolander\/font\/rswebfonts/gi)) {
+    const dir = path.dirname(filePath);
+    let file = filePath.split('/').pop();
+    file = file.split('?')[0];
+    filePath = `${dir}/${file}`;
+  }
 
+  const extname = path.extname(filePath);
     // Render our ejs
   if (extname === '.ejs') {
     ejs.renderFile(filePath, { env: 'dev' }, (err, str) => {

@@ -1,46 +1,271 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto);
-$baseColor: #eee;
-$fadeBase: rgba($baseColor, 0.2);
-$darkenBase: darken($baseColor, 20%);
-$bodyFont: 'Roboto', sans-serif;
-$desktop: 'only screen and (min-width : 993px)';
-$tablet: 'only screen and (min-width:601px) and (max-width:992px)';
-$mobile: 'only screen and (min-width:50px) and (max-width:600px)';
-
-* {
-  box-sizing: border-box;
-}
-
+// only have table styling here
 body {
-  background-color: $baseColor;
-  color: #596167;
-  font-family: $bodyFont;
   padding-top: 50px;
+}
+.save-table-area {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: none;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.save-table-name {
+  background-color: rgba(255, 255, 255, 0.8);
+  border:0;
+  padding: 5px;
+  width: 40%;
+  
+  &:focus {
+    background-color: rgba(255, 255, 255, 1);
+    outline: 0;
+    transition-duration: .2s;
+  }
+}
+.save-download {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 0;
+  border-radius: 3px;
+  color: white;
+  padding: 8px 12px;
+  transition-duration: .2s;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-decoration: none;
+  }
+  
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    outline: 0;
+    text-decoration: none;
+  }
+}
+.rs-clippy {
+  position: relative;
+}
+.rs-clippy-img {
+  position: absolute;
+  top: -130px;
+  right: 355px;
+  width: 135px;
+  z-index: 3;
+}
+.table-generator-toolbar {
+  background-color: #b28aff;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.table-generator-toolbar:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+.table-generator-toolbar:before {
+  clear: both;
+  content: '';
+  display: table;
+}
+.table-generator-save-options {
+  display: inline-block;
+  float: right;
+  padding: 7px 15px;
+  
+  button {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 0;
+    border-radius: 3px;
+    color: white;
+    padding: 3px 12px;
+    transition-duration: .2s;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.save-table-btn {
+  &:before {
+    content: '\f121';
+    font-family: 'FontAwesome';
+  }
+}
+
+.clear-table-btn {
+  &:before {
+    content: '\f12d';
+    font-family: 'FontAwesome';
+  }
+}
+
+.table-generator-addBtns {
+  display: inline-block;
+  margin-right: 25px;
+  padding: 7px 15px;
+}
+
+.table-generator-addBtns button {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 0;
+  color: white;
+  padding: 3px 12px;
+}
+.table-generator-addBtns button:focus {
+  outline: 0;
+}
+.table-generator-content {
+  display: inline-block;
+}
+.table-generator-content button {
+  background-color: rgba(255, 255, 255, 0.65);
+  border: 0;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+.table-generator-content button {
+  outline: 0;
+}
+.tg-text-btn:before {
+  content: '\f031 \f036';
+  font-family: 'FontAwesome';
+}
+.tg-times-btn:before {
+  color: #a5a4a4;
+  content: '\f00d';
+  font-family: 'FontAwesome';
+}
+.tg-check-btn:before {
+  color: #5aaa28;
+  content: '\f00c';
+  font-family: 'FontAwesome';
+}
+.tg-title-btn:before {
+  content: '\f034';
+  font-family: 'FontAwesome';
+}
+#import-table {
+  background-color: rgba(0, 0, 0, .05);
+  border: 2px dashed rgba(0, 0, 0, .2);
+  display: inline-block;
+  float: right;
+  padding: 8px 40px;
   text-align: center;
+  transition-duration: .2s;
 }
 
-@mixin clear-fix() {
-  &:after {
-   clear: both;
-   content: '';
-   display: table;
- }
-
- &:before {
-   clear: both;
-   content: '';
-   display: table;
- }
+#import-table:before {
+  color: rgba(0, 0, 0, .5);
+  content: 'Import Table (Drag and Drop .json file)';
 }
 
-@media #{$mobile} {
-  // mobile rules
+#import-table.wrong-file-type {
+  border-color: rgba(0, 0, 0, .2);
+  background-color: rgba(249, 116, 116, 1);
 }
 
-@media #{$tablet} {
- // tablet rules
+#import-table.wrong-file-type:before {
+  content: 'Invalid File Type. Please Try Again.';
 }
 
-@media #{$desktop} {
-  // desktop ru
+#import-table.correct-file-type {
+  border-color: rgba(0, 0, 0, .2);
+  background-color: rgba(59, 206, 24, 1);
+}
+
+#import-table.correct-file-type:before {
+  content: 'Success! Happy Building!';
+}
+
+#import-table.hover-file {
+  background-color: rgba(0, 0, 0, .2);
+  padding: 15px 50px;
+}
+
+#table-output {
+  .productTable-row [contenteditable=true]:focus {
+    background-color: rgba(0, 0, 0, 0.12);
+    border: 0;
+    outline: 0;
+    transition-duration: .2s;
+  }
+  .productTable-row th:hover .remove-col {
+    display: inline-block;
+  }
+  .productTable-row:hover .remove-row {
+    display: inline-block;
+  }
+  .productTable-row:hover td {
+    background-color: rgba(0, 0, 0, .05);
+  }
+}
+
+span[data-inline-text="true"] {
+  display: block;
+}
+
+.remove-col {
+  background-color: #f97474;
+  border: 0;
+  color: white;
+  display: none;
+  line-height: 0;
+  padding: 6px 4px;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+}
+
+.remove-col:before {
+  content: '-';
+  font-size: 24pt;
+}
+
+.remove-col:focus {
+  border:0;
+  outline: 0;
+}
+
+.remove-row {
+  background-color: #f97474;
+  border: 0;
+  color: white;
+  display: none;
+  line-height: 0;
+  padding: 6px 4px;
+  position: absolute;
+  right: 3px;
+  top: 20px;
+}
+
+.remove-row:before {
+  content: '-';
+  font-size: 24pt;
+  position: relative;
+  top: 4px;
+}
+
+.remove-row:focus {
+  border:0;
+  outline: 0;
+}
+
+.hover-col {
+  background-color: rgba(0, 0, 0, .05);
+}
+
+.drop-hint {
+  opacity: 0.6;
+}
+
+.ql-bubble .ql-out-bottom {
+  visibility: visible;
+}
+
+.ql-editor {
+  padding: 0;
 }

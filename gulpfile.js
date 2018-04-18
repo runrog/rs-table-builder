@@ -13,6 +13,7 @@ const imagemin = require('gulp-imagemin');
 const autoprefixer = require('gulp-autoprefixer');
 const fse = require('fs-extra');
 const path = require('path');
+const fetch = require('node-fetch');
 const reload = browserSync.reload;
 
 const copyFiles = function copyFiles(files, dest) {
@@ -85,6 +86,28 @@ const imgTask = function buildImages() {
    });
 };
 
+const updateZoolander = function updateZoolander() {
+  const z = 'https://raw.githubusercontent.com/rackerlabs/zoolander/master/dist/'
+  const files = [
+    'css/main.css',
+    'css/global.css',
+    'css/derek.css',
+    'js/global.js',
+    'font/rswebfonts.eot',
+    'font/rswebfonts.svg',
+    'font/rswebfonts.ttf',
+    'font/rswebfonts.woff',
+    'font/rswebfonts.woff2',
+  ];
+  files.forEach((f) => {
+    fetch(`${z}${f}`)
+      .then(res => {
+        const dest = fse.createWriteStream(`./dist/zoolander/${f}`);
+        res.body.pipe(dest);
+    });
+  });
+};
+
 const buildDist = function buildDist() {
   return gulp.src('src/index.ejs')
    .pipe(ejs({}, {}, { ext: '.html' }))
@@ -103,6 +126,7 @@ gulp.task('build-sass', sassTask);
 gulp.task('build-js', jsTask);
 gulp.task('build-images', imgTask);
 gulp.task('build-js-modules', jsNodeModulesTask);
+gulp.task('build-zoolander', updateZoolander);
 gulp.task('build-dist', buildDist);
 
 gulp.task('browser-sync', ['nodemon'], () => {

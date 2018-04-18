@@ -1,15 +1,4 @@
-## Node + EJS boilderplate
-
-### This boilerplate includes the following
-* Gulp (task runner)
-* EJS (templating)
-* BrowserSync (live reloading)
-* SASS (css preprocessor)
-* ES6 (gulp-babel)
-* eslint (js linting)
-* Mocha (testing)
-* Karma (test runner)
-* Chai (testing assertion lib)
+## Rackspace Table Builder
 
 ### Install and Run
 ```
