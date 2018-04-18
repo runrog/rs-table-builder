@@ -174,6 +174,14 @@ var rsTableBuilder = {
       $t.find('tbody tr td').each(function findTexts() {
         var _this3 = this;
 
+        var $feat = $(this).find('p[data-feat-title="true"]');
+        if ($feat.length) {
+          $feat.parent('span[contenteditable="true"]').on('focusout', function () {
+            console.log('save feature text'); // eslint-disable-line
+            // console.log($feat.text());
+            rsTableBuilder.updateFeat($t, $(_this3), $feat);
+          });
+        }
         var $text = $(this).find('span');
         if ($text.length && $text.attr('data-inline-text')) {
           var toolbar = [['bold', 'italic', 'underline'], ['image'], [{ list: 'ordered' }, { list: 'bullet' }], [{ script: 'sub' }, { script: 'super' }], [{ align: [] }]];
@@ -213,8 +221,7 @@ var rsTableBuilder = {
     var $td = parseInt($text.attr('data-td-index'), 10);
     // format contenteditable input then save
     var $formatted = $text.find('span > .ql-editor').html();
-    var $featuredTitle = $text.find('span').attr('data-feat-title') ? ' data-feat-title="true"' : '';
-    this.config.rows[$tr].cols[$td].content = '<span data-inline-text="true"' + $featuredTitle + '>' + $formatted + '</span>';
+    this.config.rows[$tr].cols[$td].content = '<span data-inline-text="true">' + $formatted + '</span>';
     this.saveLocal();
     this.renderTable($t, true);
   },
@@ -222,6 +229,14 @@ var rsTableBuilder = {
     var $th = parseInt($h.attr('data-th-index'), 10);
     var v = $(val).text();
     this.config.headers[$th].title = v;
+    this.saveLocal();
+    this.renderTable($t, true);
+  },
+  updateFeat: function updateFeat($t, $el, val) {
+    var $tr = parseInt($el.attr('data-tr-index'), 10);
+    var $td = parseInt($el.attr('data-td-index'), 10);
+    var v = $(val).text();
+    this.config.rows[$tr].cols[$td].content = '<p data-feat-title="true">' + v + '</p>';
     this.saveLocal();
     this.renderTable($t, true);
   },
