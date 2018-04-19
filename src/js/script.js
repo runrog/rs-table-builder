@@ -9,6 +9,8 @@ const rsTableBuilder = {
     addCol: $('#add-col'),
     output: $('.save-table-btn'),
     clear: $('.clear-table-btn'),
+    htmlString: $('#html-output'),
+    fileInput: $('#hidden-files'),
   },
   empty: {
     name: '',
@@ -38,9 +40,6 @@ const rsTableBuilder = {
     ],
   },
   config: {},
-  clearTable($t) {
-    return $t.html('');
-  },
   makeDroppable($t) {
     let type;
     document.addEventListener('drag', (e) => {
@@ -65,6 +64,7 @@ const rsTableBuilder = {
       }
     });
   },
+  editingImage: null,
   onDrop(target, type, $t) {
     const $tr = parseInt($(target).attr('data-tr-index'), 10);
     const $td = parseInt($(target).attr('data-td-index'), 10);
@@ -78,18 +78,41 @@ const rsTableBuilder = {
     if (type.match(/times/gi)) {
       content = 'notOffered';
     }
+    if (type.match(/image/gi)) {
+      content = 'Upload Image...';
+      this.editingImage = this.config.rows[$tr].cols[$td];
+      this.openFileBrowser();
+    }
     if (type.match(/title/gi)) {
       content = '<p data-feat-title="true">Feature Title</p>';
     }
     this.config.rows[$tr].cols[$td].content = content;
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
+  },
+  openFileBrowser() {
+    const inp = this.globals.fileInput;
+    inp.click();
+  },
+  convertImage(img, $t) {
+    const reader = new FileReader();
+    reader.readAsDataURL(img);
+    reader.onload = () => {
+      this.editingImage.content = `<img src="${reader.result}" />`;
+      this.saveLocal();
+      this.renderTable($t);
+    };
+    reader.onerror = (err) => {
+      console.log('Error making base64: ', err); // eslint-disable-line
+    };
   },
   renderTable($t, $editor) {
-    // reset table first
-    this.clearTable($t);
     this.globals.name.val(this.config.name);
-    const id = !this.config.id ? this.uuid() : this.config.id;
+    let id = this.config.id;
+    if (!id) {
+      id = this.uuid();
+      this.config.id = id;
+    }
     // start the build
     let $table = `<table class="productTable" id="rs-table-${id}">`;
     // table headers
@@ -162,17 +185,29 @@ const rsTableBuilder = {
     const inlineTableStyling = `
       <style type="text/css">
         table#rs-table-${id} tbody tr td {
-          width: unset;
+          width: 1%;
+        }
+        table#rs-table-${id} .productTable-featureItem {
+          vertical-align: middle;
         }
       </style>
     `;
-    $t.html(`${inlineTableStyling}${$table}`);
+    const init$Plugin = `
+    <script type="text/javascript">
+      $('table#rs-table-${id}').responsiveTable();
+    </script>`;
     if (!$editor) {
-      this.output = `${inlineTableStyling}${$table}`;
+      this.output = `${inlineTableStyling}${$table}${init$Plugin}`;
+      this.globals.htmlString.text(
+        rsTableBuilder.output,
+      );
+      // re render for $editor
+      this.renderTable($t, true);
     }
     this.packageForSave();
     // bind editor events post DOM insertion --------------------------------------------
     if ($editor) {
+      $t.html(`${inlineTableStyling}${$table}`);
       // removing row clicks
       $t.find('tbody tr .remove-row').click((e) => {
         this.removeRow(e, $t);
@@ -195,7 +230,6 @@ const rsTableBuilder = {
         if ($text.length && $text.attr('data-inline-text')) {
           const toolbar = [
             ['bold', 'italic', 'underline'],
-            ['image'],
             [{ list: 'ordered' }, { list: 'bullet' }],
             [{ script: 'sub' }, { script: 'super' }],
             [{ align: [] }],
@@ -227,9 +261,9 @@ const rsTableBuilder = {
           });
         });
       });
+      // bind table plugin from zoolander
+      $t.find('table.productTable').responsiveTable();
     }
-    // bind table plugin from zoolander
-    $t.find('table.productTable').responsiveTable();
   },
   updateText($t, $text) {
     const $tr = parseInt($text.attr('data-tr-index'), 10);
@@ -238,14 +272,14 @@ const rsTableBuilder = {
     const $formatted = $text.find('span > .ql-editor').html();
     this.config.rows[$tr].cols[$td].content = `<span data-inline-text="true">${$formatted}</span>`;
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   updateHeader($t, $h, val) {
     const $th = parseInt($h.attr('data-th-index'), 10);
     const v = $(val).text();
     this.config.headers[$th].title = v;
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   updateFeat($t, $el, val) {
     const $tr = parseInt($el.attr('data-tr-index'), 10);
@@ -253,7 +287,7 @@ const rsTableBuilder = {
     const v = $(val).text();
     this.config.rows[$tr].cols[$td].content = `<p data-feat-title="true">${v}</p>`;
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   addRow($t) {
     // count the headers and make that many cols
@@ -264,13 +298,13 @@ const rsTableBuilder = {
     }
     this.config.rows.push({ cols });
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   removeRow(e, $t) {
     const i = parseInt($(e.target).attr('data-index'), 10);
     this.config.rows.splice(i, 1);
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   addColumn($t) {
     // append header to headers
@@ -280,7 +314,7 @@ const rsTableBuilder = {
       r.cols.push({ content: false });
     });
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   removeColumn(e, $t) {
     const i = parseInt($(e.target).attr('data-index'), 10);
@@ -291,7 +325,7 @@ const rsTableBuilder = {
       r.cols.splice(i, 1);
     });
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   uuid() {
     function s4() {
@@ -306,10 +340,7 @@ const rsTableBuilder = {
   },
   file: null,
   output: '',
-  openSave($t) {
-    rsTableBuilder.renderTable($t);
-    rsTableBuilder.renderTable($t, true);
-    console.log(rsTableBuilder.output);
+  openSave() {
     rsTableBuilder.globals.saveBar.slideToggle(200);
   },
   packageForSave() {
@@ -351,7 +382,7 @@ const rsTableBuilder = {
           $importer.removeClass('wrong-file-type');
           this.config = JSON.parse(event.target.result);
           this.saveLocal();
-          this.renderTable($t, true);
+          this.renderTable($t);
           $importer.addClass('correct-file-type');
           setTimeout(() => {
             $importer.removeClass('correct-file-type');
@@ -371,7 +402,7 @@ const rsTableBuilder = {
   updateTableName(v, $t) {
     this.config.name = v;
     this.saveLocal();
-    this.renderTable($t, true);
+    this.renderTable($t);
   },
   nameTimeOut: null,
   init($t) {
@@ -393,10 +424,15 @@ const rsTableBuilder = {
     this.globals.clear.click(() => {
       this.config = JSON.parse(JSON.stringify(this.empty));
       this.saveLocal();
-      this.renderTable($t, true);
+      this.renderTable($t);
+    });
+    this.globals.fileInput.on('change', (e) => {
+      if (e.target.files.length === 1) {
+        this.convertImage(e.target.files[0], $t);
+      }
     });
     this.bindImport($t);
-    this.renderTable($t, true);
+    this.renderTable($t);
     this.makeDroppable($t);
   },
 };

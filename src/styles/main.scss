@@ -2,12 +2,14 @@
 body {
   padding-top: 50px;
 }
+
 .save-table-area {
   background-color: rgba(0, 0, 0, 0.1);
   display: none;
   margin-bottom: 10px;
   padding: 10px;
 }
+
 .save-table-name {
   background-color: rgba(255, 255, 255, 0.8);
   border:0;
@@ -20,6 +22,7 @@ body {
     transition-duration: .2s;
   }
 }
+
 .save-download {
   background-color: rgba(0, 0, 0, 0.4);
   border: 0;
@@ -41,9 +44,11 @@ body {
     text-decoration: none;
   }
 }
+
 .rs-clippy {
   position: relative;
 }
+
 .rs-clippy-img {
   position: absolute;
   top: -130px;
@@ -51,21 +56,25 @@ body {
   width: 135px;
   z-index: 3;
 }
+
 .table-generator-toolbar {
   background-color: #b28aff;
   margin-bottom: 10px;
   padding: 10px;
 }
+
 .table-generator-toolbar:after {
   clear: both;
   content: '';
   display: table;
 }
+
 .table-generator-toolbar:before {
   clear: both;
   content: '';
   display: table;
 }
+
 .table-generator-save-options {
   display: inline-block;
   float: right;
@@ -115,39 +124,57 @@ body {
   color: white;
   padding: 3px 12px;
 }
+
 .table-generator-addBtns button:focus {
   outline: 0;
 }
+
 .table-generator-content {
   display: inline-block;
 }
+
 .table-generator-content button {
   background-color: rgba(255, 255, 255, 0.65);
   border: 0;
   cursor: -webkit-grab;
   cursor: grab;
 }
+
 .table-generator-content button {
   outline: 0;
 }
+
 .tg-text-btn:before {
   content: '\f031 \f036';
   font-family: 'FontAwesome';
 }
+
 .tg-times-btn:before {
   color: #a5a4a4;
   content: '\f00d';
   font-family: 'FontAwesome';
 }
+
 .tg-check-btn:before {
   color: #5aaa28;
   content: '\f00c';
   font-family: 'FontAwesome';
 }
+
 .tg-title-btn:before {
   content: '\f034';
   font-family: 'FontAwesome';
 }
+
+.tg-image-btn:before {
+  content: '\f03e';
+  font-family: 'FontAwesome';
+}
+
+.hidden-file-browser {
+  display: none;
+}
+
 #import-table {
   background-color: rgba(0, 0, 0, .05);
   border: 2px dashed rgba(0, 0, 0, .2);
@@ -184,6 +211,17 @@ body {
 #import-table.hover-file {
   background-color: rgba(0, 0, 0, .2);
   padding: 15px 50px;
+}
+
+#html-output {
+  background: white;
+  border: 2px solid #cecece;
+  color: #6a1bff;
+  font-size: 8pt;
+  margin-top: 10px;
+  max-height: 60px;
+  overflow-y: scroll;
+  padding: 10px;
 }
 
 #table-output {

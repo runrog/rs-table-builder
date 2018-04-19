@@ -8,11 +8,11 @@
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Khand:300,400,500,600,700" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" rel="stylesheet">
     <link href="<%- path %>zoolander/css/global.css" rel="stylesheet">
     <link href="<%- path %>zoolander/css/derek.css" rel="stylesheet">
     <link href="<%- path %>zoolander/css/main.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="<%- path %>css/main.min.css">
   </head>
   <body>
@@ -26,10 +26,11 @@
             <button id="add-col">Add Column</button>
           </div>
           <div class="table-generator-content">
+            <button class="tg-title-btn" draggable="true" type="title"></button>
             <button class="tg-text-btn" draggable="true" type="gen-text"></button>
             <button class="tg-check-btn" draggable="true" type="check"></button>
             <button class="tg-times-btn" draggable="true" type="times"></button>
-            <button class="tg-title-btn" draggable="true" type="title"></button>
+            <button class="tg-image-btn" draggable="true" type="image"></button>
           </div>
           <div id="import-table"></div>
           <div class="table-generator-save-options">
@@ -37,15 +38,16 @@
             <button class="clear-table-btn"> Erase</button>
           </div>
         </div>
-        <!-- <div class="rs-clippy">
-            <img class="rs-clippy-img" src="https://78.media.tumblr.com/cd4e229690cdd57e03c46157e3a283be/tumblr_nmf9y2zyxx1ql2oz4o2_r1_250.gif" alt="">
-        </div> -->
         <div class="save-table-area">
           <input type="text" name="save-table-name" class="save-table-name" placeholder="Table Name"/>
           <a class="save-download">Save & Download</a>
+          <div id="html-output"></div>
         </div>
         <div id="table-output"></div>
       </div>
+    </div>
+    <div class="hidden-file-browser">
+      <input type="file" id="hidden-files" accept="image/*">
     </div>
     <script src="<%- path %>js/modules/jquery.min.js"></script>
     <script src="<%- path %>zoolander/js/global.js"></script>
