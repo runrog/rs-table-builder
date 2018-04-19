@@ -87,6 +87,7 @@ const imgTask = function buildImages() {
 };
 
 const updateZoolander = function updateZoolander() {
+  // we can do this because zoolander is public
   const z = 'https://raw.githubusercontent.com/rackerlabs/zoolander/master/dist/'
   const files = [
     'css/main.css',
@@ -104,6 +105,7 @@ const updateZoolander = function updateZoolander() {
       .then(res => {
         const dest = fse.createWriteStream(`./dist/zoolander/${f}`);
         res.body.pipe(dest);
+        console.log(`Successfully added "${f}" from Zoolander`);
     });
   });
 };
@@ -119,6 +121,7 @@ const buildDist = function buildDist() {
      jsTask();
      imgTask();
      jsNodeModulesTask();
+     updateZoolander();
    });
 }
 
