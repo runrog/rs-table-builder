@@ -8,6 +8,8 @@ const rsTableBuilder = {
     addRow: $('#add-row'),
     addCol: $('#add-col'),
     output: $('.save-table-btn'),
+    copyOutput: $('.copy-output-btn'),
+    copyTextarea: $('#copied-textarea'),
     clear: $('.clear-table-btn'),
     htmlString: $('#html-output'),
     fileInput: $('#hidden-files'),
@@ -187,8 +189,16 @@ const rsTableBuilder = {
         table#rs-table-${id} tbody tr td {
           width: 1%;
         }
+        @media screen and (max-width: 767px) {
+          table#rs-table-${id} tbody tr td {
+            width: 100%;
+          }  
+        }
         table#rs-table-${id} .productTable-featureItem {
           vertical-align: middle;
+        }
+        table#rs-table-${id} .productTable-feature p {
+          margin: 0;
         }
       </style>
     `;
@@ -340,6 +350,18 @@ const rsTableBuilder = {
   },
   file: null,
   output: '',
+  copyOutput(e) {
+    const t = rsTableBuilder;
+    t.globals.copyTextarea.val(t.output);
+    t.globals.copyTextarea.select();
+    document.execCommand('copy');
+    $(e.target).addClass('drupal-copied');
+    t.globals.htmlString.addClass('drupal-copied-output');
+    setTimeout(() => {
+      $(e.target).removeClass('drupal-copied');
+      t.globals.htmlString.removeClass('drupal-copied-output');
+    }, 1200);
+  },
   openSave() {
     rsTableBuilder.globals.saveBar.slideToggle(200);
   },
@@ -421,6 +443,7 @@ const rsTableBuilder = {
     this.globals.output.click(() => {
       this.openSave($t);
     });
+    this.globals.copyOutput.click(this.copyOutput);
     this.globals.clear.click(() => {
       this.config = JSON.parse(JSON.stringify(this.empty));
       this.saveLocal();

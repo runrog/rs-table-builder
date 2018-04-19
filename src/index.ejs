@@ -41,13 +41,16 @@
         <div class="save-table-area">
           <input type="text" name="save-table-name" class="save-table-name" placeholder="Table Name"/>
           <a class="save-download">Save & Download</a>
+          <button class="copy-output-btn"></button>
           <div id="html-output"></div>
         </div>
         <div id="table-output"></div>
       </div>
     </div>
     <div class="hidden-file-browser">
+      <div class="hidden-overlay"></div>
       <input type="file" id="hidden-files" accept="image/*">
+      <textarea id="copied-textarea" readonly></textarea>
     </div>
     <script src="<%- path %>js/modules/jquery.min.js"></script>
     <script src="<%- path %>zoolander/js/global.js"></script>
