@@ -10,6 +10,8 @@ var rsTableBuilder = {
     addRow: $('#add-row'),
     addCol: $('#add-col'),
     output: $('.save-table-btn'),
+    copyOutput: $('.copy-output-btn'),
+    copyTextarea: $('#copied-textarea'),
     clear: $('.clear-table-btn'),
     htmlString: $('#html-output'),
     fileInput: $('#hidden-files')
@@ -180,7 +182,7 @@ var rsTableBuilder = {
     }
     $table += '</table>';
     // add any needed css overrides
-    var inlineTableStyling = '\n      <style type="text/css">\n        table#rs-table-' + id + ' tbody tr td {\n          width: 1%;\n        }\n        table#rs-table-' + id + ' .productTable-featureItem {\n          vertical-align: middle;\n        }\n      </style>\n    ';
+    var inlineTableStyling = '\n      <style type="text/css">\n        table#rs-table-' + id + ' tbody tr td {\n          width: 1%;\n        }\n        @media screen and (max-width: 767px) {\n          table#rs-table-' + id + ' tbody tr td {\n            width: 100%;\n          }  \n        }\n        table#rs-table-' + id + ' .productTable-featureItem {\n          vertical-align: middle;\n        }\n        table#rs-table-' + id + ' .productTable-feature p {\n          margin: 0;\n        }\n      </style>\n    ';
     var init$Plugin = '\n    <script type="text/javascript">\n      $(\'table#rs-table-' + id + '\').responsiveTable();\n    </script>';
     if (!$editor) {
       this.output = '' + inlineTableStyling + $table + init$Plugin;
@@ -320,6 +322,18 @@ var rsTableBuilder = {
 
   file: null,
   output: '',
+  copyOutput: function copyOutput(e) {
+    var t = rsTableBuilder;
+    t.globals.copyTextarea.val(t.output);
+    t.globals.copyTextarea.select();
+    document.execCommand('copy');
+    $(e.target).addClass('drupal-copied');
+    t.globals.htmlString.addClass('drupal-copied-output');
+    setTimeout(function () {
+      $(e.target).removeClass('drupal-copied');
+      t.globals.htmlString.removeClass('drupal-copied-output');
+    }, 1200);
+  },
   openSave: function openSave() {
     rsTableBuilder.globals.saveBar.slideToggle(200);
   },
@@ -406,6 +420,7 @@ var rsTableBuilder = {
     this.globals.output.click(function () {
       _this6.openSave($t);
     });
+    this.globals.copyOutput.click(this.copyOutput);
     this.globals.clear.click(function () {
       _this6.config = JSON.parse(JSON.stringify(_this6.empty));
       _this6.saveLocal();
