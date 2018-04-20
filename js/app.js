@@ -430,6 +430,7 @@ var rsTableBuilder = {
       if (e.target.files.length === 1) {
         _this6.convertImage(e.target.files[0], $t);
       }
+      e.target.value = null;
     });
     this.bindImport($t);
     this.renderTable($t);
