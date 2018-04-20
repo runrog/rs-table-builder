@@ -1,4 +1,7 @@
-## Rackspace Table Builder
+## Rackspace Table Builder.
+For tables used on rackspace.com
+
+![](rs-table-builder.gif)
 
 ### Install and Run
 ```
@@ -16,6 +19,11 @@ gulp build-dist
 
 ### Gulp Tasks
 Gulp tasks will run automatically but to manually run them:
+
+As this repository consumes Zoolander, you can manually bring in the latest content like so:
+```
+gulp build-zoolander
+```
 
 Building Javascript: This will concat the js files together in order by name:
 ```
